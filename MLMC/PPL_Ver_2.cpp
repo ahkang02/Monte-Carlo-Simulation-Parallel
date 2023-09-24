@@ -23,7 +23,7 @@ using std::vector;
 using namespace concurrency;
 
 int main() {
-	Scheduler::SetDefaultSchedulerPolicy(SchedulerPolicy(2, MinConcurrency, 1, MaxConcurrency, 1));
+	Scheduler::SetDefaultSchedulerPolicy(SchedulerPolicy(2, MinConcurrency, 1, MaxConcurrency, 6));
 	clock_t start, end;
 
 	double S0 = 90;
@@ -37,7 +37,7 @@ int main() {
 
 	cout << "\nFor S0 = " << S0 << ", K = " << K << ", r = " << r << ", v = " << v << " and B = " << B << " : ";
 
-	int num_sims = pow(10, 5);
+	int num_sims = pow(10, 4);
 
 	vector<double> put_euler(num_sims, 0.0);
 	vector<double> call_euler(num_sims, 0.0);

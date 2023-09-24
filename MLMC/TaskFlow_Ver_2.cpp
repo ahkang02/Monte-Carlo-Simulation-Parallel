@@ -23,7 +23,7 @@ using namespace std;
 int main() {
 
 	tf::Taskflow taskflow;
-	tf::Executor executor(12);
+	tf::Executor executor(6);
 
 	clock_t start, end;
 
@@ -36,13 +36,13 @@ int main() {
 	double act = exp(-r * T);
 	double B = 100;
 	unsigned num_intervals = 250;
-	int num_sims = pow(10, 5);
+	int num_sims = pow(10, 4);
 
 	//in order to use taskflow.reduce, need declare
 	//create a vector of size num_sims with all elements initialized to 0
 	std::vector<double> put_euler(num_sims, 0.0);
 	std::vector<double> call_euler(num_sims, 0.0);
-	std::vector<double> put_euler_squared(num_sims, 0.0);
+	std::vector<double> put_euler_squared(num_sims,  0.0);
 	std::vector<double> call_euler_squared(num_sims, 0.0);
 	std::vector<double> MC_UIC(num_sims, 0.0);
 	std::vector<double> MC_UIP(num_sims, 0.0);
