@@ -61,15 +61,14 @@ int main() {
 	double final_MC_DOC_sum = 0;
 	double final_MC_DOP_sum = 0;
 
-	vector<vector<double>> euler_spot_prices(num_sims, vector<double>(num_intervals, S0));
+	std::vector<vector<double>> euler_spot_prices(num_sims, vector<double>(num_intervals, S0));
 
-	omp_set_num_threads(16);
+	omp_set_num_threads(2);
 	printf_s("\n%d\n", omp_get_max_threads());
 
 	start = clock();
 #pragma omp parallel for 
 	for (int n = 0; n < num_sims; n++) {
-		//vector<double> euler_spot_prices(num_intervals, S0);
 		GBM_EULER(euler_spot_prices[n], r, v, T);
 
 		put_euler[n] += act * Put(euler_spot_prices[n][num_intervals - 1], K) / static_cast<double>(num_sims);

@@ -23,7 +23,7 @@ using namespace std;
 int main() {
 
 	tf::Taskflow taskflow;
-	tf::Executor executor(24);
+	tf::Executor executor(12);
 
 	clock_t start, end;
 

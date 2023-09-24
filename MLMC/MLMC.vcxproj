@@ -226,9 +226,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OpenMP.cpp" />
     <ClCompile Include="PPL.cpp" />
-    <ClCompile Include="Taskflow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
