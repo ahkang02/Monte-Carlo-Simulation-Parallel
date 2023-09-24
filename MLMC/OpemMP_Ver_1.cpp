@@ -34,76 +34,112 @@ int main() {
 
 	std::cout << "\nFor S0 = " << S0 << ", K = " << K << ", r = " << r << ", v = " << v << " and B = " << B << " : ";
 
-	double put_euler = 0; double call_euler = 0;
-	double put_euler_squared = 0; double call_euler_squared = 0;
-	double MC_UIC = 0; double MC_UIP = 0; double MC_UOC = 0; double MC_UOP = 0;
-	double MC_DIC = 0; double MC_DIP = 0; double MC_DOC = 0; double MC_DOP = 0;
-	int num_sims = pow(10, 6);
+	int num_sims = pow(10, 5);
+	std::vector<double> put_euler(num_sims, 0.0);
+	std::vector<double> call_euler(num_sims, 0.0);
+	std::vector<double> put_euler_squared(num_sims, 0.0);
+	std::vector<double> call_euler_squared(num_sims, 0.0);
+	std::vector<double> MC_UIC(num_sims, 0.0);
+	std::vector<double> MC_UIP(num_sims, 0.0);
+	std::vector<double> MC_UOC(num_sims, 0.0);
+	std::vector<double> MC_UOP(num_sims, 0.0);;
+	std::vector<double> MC_DIC(num_sims, 0.0);
+	std::vector<double> MC_DIP(num_sims, 0.0);
+	std::vector<double> MC_DOC(num_sims, 0.0);
+	std::vector<double> MC_DOP(num_sims, 0.0);
 
-	omp_set_num_threads(2);
-	//printf_s("\n%d\n", omp_get_max_threads());
+	double final_put_euler_sum = 0;
+	double final_put_euler_squared_sum = 0;
+	double final_call_euler_sum = 0;
+	double final_call_euler_squared_sum = 0;
+	double final_MC_UIC_sum = 0;
+	double final_MC_UIP_sum = 0;
+	double final_MC_UOC_sum = 0;
+	double final_MC_UOP_sum = 0;
+	double final_MC_DIC_sum = 0;
+	double final_MC_DIP_sum = 0;
+	double final_MC_DOC_sum = 0;
+	double final_MC_DOP_sum = 0;
+
+
+	omp_set_num_threads(12);
+	printf_s("\n%d\n", omp_get_max_threads());
 
 	start = clock();
-#pragma omp parallel for reduction(+:put_euler, call_euler, put_euler_squared, call_euler_squared, MC_UIC, MC_UIP, MC_UOC, MC_UOP, MC_DIC, MC_DIP, MC_DOC, MC_DOP) 
+#pragma omp parallel for 
 	for (int n = 0; n < num_sims; n++) {
-		vector<double> euler_spot_prices(num_intervals, S0);
+		std::vector<double> euler_spot_prices(num_intervals, S0);
 		GBM_EULER(euler_spot_prices, r, v, T);
 
-		put_euler += act * Put(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
-		call_euler += act * Call(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
-		put_euler_squared += (pow(Put(euler_spot_prices[num_intervals - 1], K), 2)) / (static_cast<double>(num_sims) - 1);
-		call_euler_squared += (pow(Call(euler_spot_prices[num_intervals - 1], K), 2)) / (static_cast<double>(num_sims) - 1);
+		put_euler[n] += act * Put(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
+		call_euler[n] += act * Call(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
+		put_euler_squared[n] += (pow(Put(euler_spot_prices[num_intervals - 1], K), 2)) / (static_cast<double>(num_sims) - 1);
+		call_euler_squared[n] += (pow(Call(euler_spot_prices[num_intervals - 1], K), 2)) / (static_cast<double>(num_sims) - 1);
 
 		if (*max_element(euler_spot_prices.begin(), euler_spot_prices.end()) >= B) {
-			MC_UIC += act * Call(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
-			MC_UIP += act * Put(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
-			MC_UOC += 0; MC_UOP += 0;
+			MC_UIC[n] += act * Call(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
+			MC_UIP[n] += act * Put(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
+			MC_UOC[n] += 0; MC_UOP[n] += 0;
 		}
 		else {
-			MC_UIC += 0; MC_UIP += 0;
-			MC_UOC += act * Call(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
-			MC_UOP += act * Put(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
+			MC_UIC[n] += 0; MC_UIP[n] += 0;
+			MC_UOC[n] += act * Call(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
+			MC_UOP[n] += act * Put(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
 		}
 
 		if (*min_element(euler_spot_prices.begin(), euler_spot_prices.end()) <= B) {
-			MC_DIC += act * Call(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
-			MC_DIP += act * Put(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);;
-			MC_DOC += 0; MC_DOP += 0;
+			MC_DIC[n] += act * Call(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
+			MC_DIP[n] += act * Put(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);;
+			MC_DOC[n] += 0; MC_DOP[n] += 0;
 		}
 		else {
-			MC_DOC += act * Call(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
-			MC_DOP += act * Put(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
-			MC_DIC += 0; MC_DIP += 0;
+			MC_DOC[n] += act * Call(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
+			MC_DOP[n] += act * Put(euler_spot_prices[num_intervals - 1], K) / static_cast<double>(num_sims);
+			MC_DIC[n] += 0; MC_DIP[n] += 0;
 		}
 
 	}
 
+	for (int n = 0; n < num_sims; n++) {
+		final_put_euler_sum += put_euler[n];
+		final_put_euler_squared_sum += put_euler_squared[n];
+		final_call_euler_sum += call_euler[n];
+		final_call_euler_squared_sum += call_euler_squared[n];
+		final_MC_UIC_sum += MC_UIC[n];
+		final_MC_UIP_sum += MC_UIP[n];
+		final_MC_UOC_sum += MC_UOC[n];
+		final_MC_UOP_sum += MC_UOP[n];
+		final_MC_DIC_sum += MC_DIC[n];
+		final_MC_DIP_sum += MC_DIP[n];
+		final_MC_DOC_sum += MC_DOC[n];
+		final_MC_DOP_sum += MC_DOP[n];
+	};
+
 	end = clock();
 
-	double put_MC_std = pow((put_euler_squared - pow(put_euler, 2)), 0.5);
-	double call_MC_std = pow((call_euler_squared - pow(call_euler, 2)), 0.5);
+	double put_MC_std = pow((final_put_euler_squared_sum - pow(final_put_euler_sum, 2)), 0.5);
+	double call_MC_std = pow((final_call_euler_squared_sum - pow(final_call_euler_sum, 2)), 0.5);
 
 	std::cout << "\n\n\nStandard MC with nbr of simulations = " << num_sims << " :";
 
-	std::cout << "\n\nMC Put price GBM Euler = " << put_euler << " with MC std dev = " << put_MC_std * 100 << "%";
+	std::cout << "\n\nMC Put price GBM Euler = " << final_put_euler_sum << " with MC std dev = " << put_MC_std * 100 << "%";
 	std::cout << " and MC std error = " << put_MC_std / (static_cast<double>(num_sims)) * 100 << "%";
 
-	std::cout << "\nMC Call price GBM Euler = " << call_euler << " with MC std dev = " << call_MC_std * 100 << "%";
+	std::cout << "\nMC Call price GBM Euler = " << final_call_euler_sum << " with MC std dev = " << call_MC_std * 100 << "%";
 	std::cout << " and MC std error = " << call_MC_std / (static_cast<double>(num_sims)) * 100 << "%";
 
-	std::cout << "\n\n\nMC Up-and-Out Put price Euler = " << MC_UOP;
-	std::cout << "\nMC Up-and-Out Call price Euler = " << MC_UOC;
+	std::cout << "\n\n\nMC Up-and-Out Put price Euler = " << final_MC_UOP_sum;
+	std::cout << "\nMC Up-and-Out Call price Euler = " << final_MC_UOC_sum;
 
-	std::cout << "\n\nMC Up-and-In Put price Euler = " << MC_UIP;
-	std::cout << "\nMC Up-and-In Call price Euler = " << MC_UIC;
+	std::cout << "\n\nMC Up-and-In Put price Euler = " << final_MC_UIP_sum;
+	std::cout << "\nMC Up-and-In Call price Euler = " << final_MC_UIC_sum;
 
-	std::cout << "\n\nMC Down-and-Out Put price Euler = " << MC_DOP;
-	std::cout << "\nMC Down-and-Out Call price Euler = " << MC_DOC;
+	std::cout << "\n\nMC Down-and-Out Put price Euler = " << final_MC_DOP_sum;
+	std::cout << "\nMC Down-and-Out Call price Euler = " << final_MC_DOC_sum;
 
-	std::cout << "\n\nMC Down-and-In Put price Euler = " << MC_DIP;
-	std::cout << "\nMC Down-and-In Call price Euler = " << MC_DIC;
+	std::cout << "\n\nMC Down-and-In Put price Euler = " << final_MC_DIP_sum;
+	std::cout << "\nMC Down-and-In Call price Euler = " << final_MC_DIC_sum;
 
 	std::cout << "\n\nMC CPU time = " << end - start << " sec";
-	std::cout << "\n";
 
 }

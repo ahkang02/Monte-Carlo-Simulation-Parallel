@@ -36,7 +36,7 @@ int main() {
 	double act = exp(-r * T);
 	double B = 100;
 	unsigned num_intervals = 250;
-	int num_sims = pow(10, 4);
+	int num_sims = pow(10, 5);
 
 	//in order to use taskflow.reduce, need declare
 	//create a vector of size num_sims with all elements initialized to 0

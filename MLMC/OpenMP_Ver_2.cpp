@@ -63,7 +63,7 @@ int main() {
 
 	std::vector<vector<double>> euler_spot_prices(num_sims, vector<double>(num_intervals, S0));
 
-	omp_set_num_threads(2);
+	omp_set_num_threads(12);
 	printf_s("\n%d\n", omp_get_max_threads());
 
 	start = clock();

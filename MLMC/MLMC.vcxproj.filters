@@ -260,7 +260,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PPL_Ver_2.cpp">
+    <ClCompile Include="OpenMP_Ver_2.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
