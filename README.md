@@ -1,61 +1,23 @@
-# European and path-dependent options pricing by MLMC
+# Parallelism of Monte Carlo Simulation 🎲
 
-### Objectives:
+This repository explores the parallelism of Monte Carlo Simulation, focusing on the Crude Monte Carlo Method. We've adopted the source code originally created by ALXCHU and made modifications to narrow our focus to the Crude Monte Carlo Method. We've implemented three different types of parallelism techniques:
 
-- Implementation of Multi Level Monte Carlo method
-- Variance & computational cost comparison with crude MC
-- Test different discretization schemes/Add IS procedure
+- OpenMP 🚀
+- PPL 🌟
+- TaskFlow 📊
 
-#
-### Output overview :
+## Collaborators 👥
 
-- Closed-form formula:
+This project was made possible through the collaborative efforts of the following individuals:
 
-![MLMC_Results_1](https://user-images.githubusercontent.com/56386159/134658050-b15903d5-766b-49aa-9556-698b54aad12d.PNG)
+- Mok Chun Kit Calvin ([GitHub Profile](https://github.com/Mok02)) - Mok02
+- Tan Yan Pin ([GitHub Profile](https://github.com/FlippyNat)) - FlippyNat
 
+## How to Use 📋
 
-- Crude Monte Carlo:
+To use the parallelism implementations for Monte Carlo Simulation in this repository, follow these steps:
 
-![MLMC_Results_2](https://user-images.githubusercontent.com/56386159/134658006-8c886b0a-92cd-4688-8419-e3b68a484a82.PNG)
+1. Clone the repository:
 
-
-- Brownian Bridge method:
-
-![MLMC_Results_3](https://user-images.githubusercontent.com/56386159/134657856-cca8a6ae-5dd1-4e54-9a43-bc0547875a9d.PNG)
-
-
-#
-### MLMC:
-
-- With time steps T/2**l:
-
-![MLMC](https://user-images.githubusercontent.com/56386159/149523617-dca391f4-d48a-4ca9-87ab-bd75d9814bab.PNG)
-
-#
-### More paths for discrete approximations with lower time steps:
-
-![MLMC-RR2](https://user-images.githubusercontent.com/56386159/153203285-7a750c3e-cc44-41de-9654-0ecd173ce888.PNG)
-
-#
-### After computation of the optimal parameters:
-
-### Example 1: comparison for pricing Call option 
-
-- Using Euler scheme
-- MC: computational complexity = 300E6 & CPU time = 36.7 sec
-- MLMC: computational complexity = 51E6 & CPU time = 6.7 sec
-
-#
-### Example 2: comparison for pricing Up-and-Out Call Barrier option 
-
-- Using Milstein scheme
-- MC: computational complexity = 561E6 & CPU time = 25.5 sec
-- MLMC: computational complexity = 36E6 & CPU time = 6.3 sec
-
-#
-### References:
-
-- https://people.maths.ox.ac.uk/gilesm/files/OPRE_2008.pdf
-- https://arxiv.org/pdf/1401.1177.pdf
-- https://simulations.lpma.math.upmc.fr/multilevel/
-
+   ```sh
+   git clone [https://[github.com/YourGitHubUsername/Parallel-Monte-Carlo-Simulation.git](https://github.com/ahkang02/Monte-Carlo-Simulation-Parallel)](https://github.com/ahkang02/Monte-Carlo-Simulation-Parallel)https://github.com/ahkang02/Monte-Carlo-Simulation-Parallel
