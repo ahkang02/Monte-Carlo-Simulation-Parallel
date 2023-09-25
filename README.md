@@ -18,6 +18,4 @@ This project was made possible through the collaborative efforts of the followin
 To use the parallelism implementations for Monte Carlo Simulation in this repository, follow these steps:
 
 1. Clone the repository:
-
-   ```sh
-   git clone [https://[github.com/YourGitHubUsername/Parallel-Monte-Carlo-Simulation.git](https://github.com/ahkang02/Monte-Carlo-Simulation-Parallel)](https://github.com/ahkang02/Monte-Carlo-Simulation-Parallel)https://github.com/ahkang02/Monte-Carlo-Simulation-Parallel
+2. Run it using Visual Studio :) 
